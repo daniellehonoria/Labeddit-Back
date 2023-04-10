@@ -1,12 +1,14 @@
-import { IUsersDB } from "../types";
+import { threadId } from "worker_threads";
+import { USER_ROLES, UserDB, UserModel } from "../types";
 
 
 export class User {    
     constructor(
         private id: string,
-        private nickname: string,
+        private name: string,
         private email: string,
         private password: string,
+        private role: USER_ROLES,
         private createdAt: string
     ) {}
 
@@ -18,12 +20,12 @@ export class User {
         this.id = value
     }
 
-    public getnickname(): string {
-        return this.nickname
+    public getName(): string {
+        return this.name
     }
 
-    public setnickname(value: string): void {
-        this.nickname = value
+    public setName(value: string): void {
+        this.name = value
     }
 
     public getEmail(): string {
@@ -42,7 +44,12 @@ export class User {
         this.password = value
     }
 
-
+    public getRole():USER_ROLES{
+        return this.role
+    }
+    public setRole (value:USER_ROLES): void{
+        this.role = value
+    }
     public getCreatedAt(): string {
         return this.createdAt
     }
@@ -51,13 +58,25 @@ export class User {
         this.createdAt = value
     }
 
-    public toDBModel(): IUsersDB {
+    public toDBModel(): UserDB {
         return {
             id: this.id,
-            nickname: this.nickname,
+            name: this.name,
             email: this.email,
             password: this.password,
+            role: this.role,
             created_at: this.createdAt
+        }
+    }
+
+    public toBusinessModel(): UserModel {
+        return {
+            id: this.id,
+            name: this.name,
+            email: this.email,
+            password: this.password,
+            role: this.role,
+            createdAt: this.createdAt
         }
     }
 
