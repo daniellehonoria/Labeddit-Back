@@ -84,4 +84,42 @@ VALUES
 
 UPDATE posts
 SET likes = 3
-WHERE id = "p004"
+WHERE id = "p004";
+
+CREATE TABLE comments (
+  id TEXT PRIMARY KEY UNIQUE NOT NULL,
+  post_id TEXT NOT NULL,
+  content TEXT NOT NULL,
+  likes INTEGER DEFAULT(0),
+  dislikes INTEGER DEFAULT(0),
+  created_at TEXT DEFAULT(DATETIME()),
+  updated_at TEXT DEFAULT(DATETIME()),
+  creator_id TEXT NOT NULL,
+  FOREIGN KEY (creator_id) REFERENCES users(id)
+    ON DELETE CASCADE
+    ON UPDATE CASCADE,
+  FOREIGN KEY (post_id) REFERENCES posts(id)
+    ON DELETE CASCADE
+    ON UPDATE CASCADE
+);
+SELECT * FROM comments;
+INSERT INTO comments (id, post_id, content, creator_id) VALUES
+  ("c001", "p001", "Teste comentário", "u001"),
+  ("c002", "9f912868-cc2d-4af9-aa00-f0946ede240b", "Teste comentário2", "u005");
+
+  CREATE TABLE likes_dislikes_comments (
+  user_id TEXT NOT NULL,
+  comment_id TEXT NOT NULL,
+  post_id TEXT NOT NULL,
+  like INTEGER NOT NULL,
+  FOREIGN KEY (user_id) REFERENCES users(id)
+    ON DELETE CASCADE
+    ON UPDATE CASCADE,
+  FOREIGN KEY (comment_id) REFERENCES comments(id)
+    ON DELETE CASCADE
+    ON UPDATE CASCADE,
+  FOREIGN KEY (post_id) REFERENCES posts(id)
+    ON DELETE CASCADE
+    ON UPDATE CASCADE,
+  UNIQUE (user_id, comment_id, post_id)
+);
