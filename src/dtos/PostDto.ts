@@ -1,5 +1,5 @@
 import { BadRequestError } from "../Errors/BadRequestError"
-import {  CreatePostInputDTO } from "../types"
+import {  CreatePostInputDTO } from "../interfaces"
 
 export class PostDTO{
     public createPostInput(

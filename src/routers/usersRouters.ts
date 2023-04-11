@@ -1,17 +1,17 @@
 import express  from "express"
-import { UsersController } from "../controller/UsersController"
-import { UserBusiness } from "../business/UsersBusiness"
-import { UsersDatabase } from "../database/UsersDatabase"
+import { UserBusiness } from "../business/UserBusiness"
+import { UserController } from "../controller/UserController"
+import { UserDatabase } from "../database/UsersDatabase"
+import { HashManager } from "../services/HashManager"
 import { IdGenerator } from "../services/IdGenerator"
 import { TokenManager } from "../services/TokenManager"
-import { HashManager } from "../services/HashManager"
 
 
 export const userRouter = express.Router()
 
-const userController = new UsersController(
+const userController = new UserController(
     new UserBusiness(
-        new UsersDatabase(),
+        new UserDatabase(),
         new IdGenerator(),
         new TokenManager(),
         new HashManager()

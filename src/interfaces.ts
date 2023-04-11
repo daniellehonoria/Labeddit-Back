@@ -11,8 +11,31 @@ export interface TokenPayload {
 	name: string,
     role: USER_ROLES
 }
-
-//passado para o front
+export interface IUsersDB{
+    id: string,
+    name: string,
+    email:string,
+    password: string,
+    role: USER_ROLES,
+    created_at: string
+}
+export interface UserModel{
+    id: string,
+    name: string,
+    email:string,
+    password: string,
+    role: USER_ROLES,
+    createdAt: string
+}
+export interface IPostDB{
+    id: string,
+    creator_id: string,
+    content: string,
+    likes: number,
+    dislikes: number,
+    created_at: string,
+    updated_at: string
+}
 export interface PostsModel{
     id: string,
     content: string,
@@ -22,48 +45,8 @@ export interface PostsModel{
     updatedAt: string,
     creator:{
         id:string,
-        name:string
     }
 }
-export interface PostDB{
-    id: string,
-    creator_id: string,
-    creator_name:string,
-    content: string,
-    likes: number,
-    dislikes: number,
-    created_at: string,
-    updated_at: string
-}
-export interface PostCreatorDB{
-    id: string,
-    creator_id: string,
-    content: string,
-    likes: number,
-    dislikes: number,
-    created_at: string,
-    updated_at: string,
-    creator_name:string
-
-}
-export interface UserDB{
-    id: string,
-    name: string,
-    email:string,
-    password: string,
-    role: USER_ROLES,
-    created_at: string
-}
-
-export interface UserModel{
-    id: string,
-    name: string,
-    email:string,
-    password: string,
-    role: USER_ROLES,
-    createdAt: string
-}
-
 export interface CreatePostInputDTO{
     token: string | undefined,
     content: string

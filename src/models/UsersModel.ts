@@ -1,6 +1,4 @@
-import { threadId } from "worker_threads";
-import { USER_ROLES, UserDB, UserModel } from "../types";
-
+import { IUsersDB, UserModel, USER_ROLES } from "../interfaces"
 
 export class User {    
     constructor(
@@ -44,12 +42,14 @@ export class User {
         this.password = value
     }
 
-    public getRole():USER_ROLES{
+    public getRole(): USER_ROLES {
         return this.role
     }
-    public setRole (value:USER_ROLES): void{
+
+    public setRole(value: USER_ROLES): void {
         this.role = value
     }
+
     public getCreatedAt(): string {
         return this.createdAt
     }
@@ -58,7 +58,7 @@ export class User {
         this.createdAt = value
     }
 
-    public toDBModel(): UserDB {
+    public toDBModel(): IUsersDB {
         return {
             id: this.id,
             name: this.name,
@@ -79,6 +79,4 @@ export class User {
             createdAt: this.createdAt
         }
     }
-
-   
 }

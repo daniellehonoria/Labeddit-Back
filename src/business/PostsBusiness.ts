@@ -1,11 +1,10 @@
 import { PostDatabase } from "../database/PostsDatabase";
 import { BadRequestError } from "../Errors/BadRequestError";
 import { NotFoundError } from "../Errors/NotFoundError";
-import {  CreatePostInputDTO, DeletePostInputDTO, EditPostInputDTO, PostDB, LikeOrDislikeDB, LikeOrDislikePostDTO, POST_LIKE, USER_ROLES } from "../types";
-import { Post } from "../models/PostsModel";
+import {  CreatePostInputDTO, DeletePostInputDTO, EditPostInputDTO, IPostDB, LikeOrDislikeDB, LikeOrDislikePostDTO, POST_LIKE, USER_ROLES } from "../interfaces";
+import { Posts } from "../models/PostsModel";
 import { IdGenerator } from "../services/IdGenerator";
 import { TokenManager } from "../services/TokenManager";
-import { GetPostsInputDTO } from "../dtos/UserDTO";
 
 export class PostsBusiness{
     constructor(
@@ -14,18 +13,17 @@ export class PostsBusiness{
         private tokenManager : TokenManager
 
     ){}
-public getPosts = async(input:GetPostsInputDTO)=>{
-    const postsDB: PostDB[] = await this.postsDatabase.findPosts()
+public getPosts = async()=>{
+    const postsDB: IPostDB[] = await this.postsDatabase.findPosts()
 
-    const posts = postsDB.map((postDB)=> new Post(
+    const posts = postsDB.map((postDB)=> new Posts(
         postDB.id,
         postDB.content,
         postDB.likes,
         postDB.dislikes,
         postDB.created_at,
         postDB.updated_at,
-        postDB.creator_id,
-        postDB.creator_name
+        postDB.creator_id
             ))
     return posts
 }
@@ -46,7 +44,7 @@ public createPost = async (input:CreatePostInputDTO):Promise<void> =>{
     const creatorId =  payload.id
 
     //instancia do post
-    const newPost = new Post(
+    const newPost = new Posts(
         id, 
         content,
         0,
@@ -54,11 +52,9 @@ public createPost = async (input:CreatePostInputDTO):Promise<void> =>{
         createdAt,
         updatedAt,
         creatorId,
-        creatorName
-
     ) 
     //modelagem da tabela
-    const postToDB = newPost.toDBModel()
+    const postToDB = newPost.toDBModelPosts()
 
     await this.postsDatabase.createPost(postToDB)
 
@@ -88,15 +84,14 @@ public editPost = async (input:EditPostInputDTO) :Promise<void>=>{
         throw new BadRequestError("somente quem criou o post pode editá-lo")
     }
 
-    const putPost = new Post(
+    const putPost = new Posts(
         postsDBIdExists.id, 
         postsDBIdExists.content,
         postsDBIdExists.likes,
         postsDBIdExists.dislikes,
         postsDBIdExists.created_at,
         postsDBIdExists.updated_at,
-        creatorId,
-        creatorName
+        creatorId
     ) 
     //enquanto newId for thruty, não executa o putPost, quando for falsy, setId altera o valor de newId
     putPost.setContent(newContent)
@@ -105,7 +100,7 @@ public editPost = async (input:EditPostInputDTO) :Promise<void>=>{
     // id && putPost.setId(id)
     // newContent && putPost.setContent(newContent)
 
-    const putPostDB = putPost.toDBModel()
+    const putPostDB = putPost.toDBModelPosts()
 
     await this.postsDatabase.upDatePostById(id, putPostDB)
 
@@ -156,18 +151,16 @@ public likeOrDislikePost = async(input: LikeOrDislikePostDTO): Promise<void> =>{
         post_id: postCreatorDB.id,
         like: likeBoolean
     }
-    const listPost= new Post(
+const listPost= new Posts(
         postCreatorDB.id, 
         postCreatorDB.content,
         postCreatorDB.likes,
         postCreatorDB.dislikes,
         postCreatorDB.created_at,
         postCreatorDB.updated_at,
-        postCreatorDB.creator_id,
-        postCreatorDB.creator_name
+        postCreatorDB.creator_id
     )
-    const likeDislikeExists = await this.postsDatabase.findLikeDislike(likeOrDislike)
-
+const likeDislikeExists = await this.postsDatabase.findLikeDislike(likeOrDislike)
     if (likeDislikeExists === POST_LIKE.ALREADY_LIKED) {
         
         if (like) {
@@ -178,7 +171,6 @@ public likeOrDislikePost = async(input: LikeOrDislikePostDTO): Promise<void> =>{
             listPost.removeLike()
             listPost.addDislike()
         }
-
       } else if (likeDislikeExists === POST_LIKE.ALREADY_DISLIKED) {
             if (like) {
                 await this.postsDatabase.updateLikeDislike(likeOrDislike)
@@ -188,15 +180,13 @@ public likeOrDislikePost = async(input: LikeOrDislikePostDTO): Promise<void> =>{
                 await this.postsDatabase.removeLikeDislike(likeOrDislike)
                 listPost.removeDislike()
             }
-
         } else {
             await this.postsDatabase.likeOrDislikePost(likeOrDislike)
     
             like ? listPost.addLike() : listPost.addDislike()
         }
 
-        const updatedPostDB = listPost.toDBModel()
-    
+        const updatedPostDB = listPost.toDBModelPosts()
         await this.postsDatabase.upDatePostById(id, updatedPostDB)
     }
 }
