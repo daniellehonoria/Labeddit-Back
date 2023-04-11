@@ -41,7 +41,6 @@ public findPostByCreatorId = async(postId: string):Promise<IPostDB | undefined> 
     .select(
         "posts.id",
         "posts.creator_id",
-        "posts.creator_name",
         "posts.content",
         "posts.likes",
         "posts.dislikes",
