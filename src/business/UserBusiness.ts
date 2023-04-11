@@ -1,16 +1,16 @@
+import { UserDatabase } from "../database/UsersDatabase"
 import { BadRequestError } from "../Errors/BadRequestError"
 import { NotFoundError } from "../Errors/NotFoundError"
-import { UsersDatabase } from "../database/UsersDatabase"
-import { LoginInputDTO, LoginOutputDTO, SignupInputDTO, SignupOutputDTO } from "../dtos/UserDTO"
 import { User } from "../models/UsersModel"
-import { HashManager } from "../services/HashManager"
 import { IdGenerator } from "../services/IdGenerator"
 import { TokenManager } from "../services/TokenManager"
-import { TokenPayload, USER_ROLES, UserDB } from "../types"
+import { IUsersDB, TokenPayload, USER_ROLES } from "../interfaces"
+import { HashManager } from "../services/HashManager"
+import { LoginInputDTO, LoginOutputDTO, SignupInputDTO, SignupOutputDTO } from "../dtos/UserDTO";
 
 export class UserBusiness {
     constructor(
-        private userDatabase: UsersDatabase,
+        private userDatabase: UserDatabase,
         private idGenerator: IdGenerator,
         private tokenManager: TokenManager,
         private hashManager: HashManager
@@ -20,15 +20,15 @@ export class UserBusiness {
         const { name, email, password } = input
 
         if (typeof name !== "string") {
-            throw new BadRequestError("'Name' deve ser string")
+            throw new BadRequestError("'name' deve ser string")
         }
 
         if (typeof email !== "string") {
-            throw new BadRequestError("'E-mail' deve ser string")
+            throw new BadRequestError("'email' deve ser string")
         }
 
         if (typeof password !== "string") {
-            throw new BadRequestError("'Password' deve ser string")
+            throw new BadRequestError("'password' deve ser string")
         }
 
         const id = this.idGenerator.generate()
@@ -75,7 +75,7 @@ export class UserBusiness {
             throw new BadRequestError("'password' deve ser string")
         }
 
-        const userDB: UserDB | undefined = await this.userDatabase.findByEmail(email)
+        const userDB: IUsersDB | undefined = await this.userDatabase.findUserByEmail(email)
 
         if (!userDB) {
             throw new NotFoundError("'email' não cadastrado")

@@ -2,8 +2,7 @@ import { Request, Response } from "express"
 import { PostsBusiness } from "../business/PostsBusiness";
 import { PostDTO } from "../dtos/PostDto";
 import { BaseError } from "../Errors/BaseError";
-import { CreatePostInputDTO, DeletePostInputDTO, EditPostInputDTO, LikeOrDislikePostDTO } from "../types";
-import { GetPostsInputDTO } from "../dtos/UserDTO";
+import { CreatePostInputDTO, DeletePostInputDTO, EditPostInputDTO, LikeOrDislikePostDTO } from "../interfaces";
 
 export class PostController{
     constructor(
@@ -13,11 +12,7 @@ export class PostController{
     ){}
     public getPosts = async(req: Request, res:Response) =>{
         try {
-        const input: GetPostsInputDTO = {
-            token:req.headers.authorization
-        }
-
-            const output = await this.postsBusiness.getPosts(input)
+            const output = await this.postsBusiness.getPosts()
             res.status(200).send(output)
         } catch (error) {
             console.log(error)

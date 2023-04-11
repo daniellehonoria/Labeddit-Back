@@ -1,11 +1,14 @@
-import { LoginInputDTO, SignupInputDTO } from "../dtos/UserDTO";
-import { Request, Response } from "express";
-import { UserBusiness } from "../business/UsersBusiness";
-export class UsersController{
+import { Request, Response } from "express"
+import { UserBusiness } from "../business/UserBusiness"
+import { LoginInputDTO, SignupInputDTO, SignupOutputDTO } from "../dtos/UserDTO"
+
+
+export class UserController {
     constructor(
-      private  userBusiness: UserBusiness
-    ){ }
-    public signup = async (req: Request, res: Response) => {
+        private userBusiness: UserBusiness
+    ) {}
+
+      public signup = async (req: Request, res: Response) => {
         try {
             const input: SignupInputDTO = {
                 name: req.body.name,

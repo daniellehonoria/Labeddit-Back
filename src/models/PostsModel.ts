@@ -1,15 +1,14 @@
-import { PostDB, PostsModel } from "../types";
+import { IPostDB, PostsModel } from "../interfaces";
 
-export class Post{
+export class Posts{
     constructor(
-        private id: string,
-        private content: string,
-        private likes: number,
-        private dislikes: number,
-        private createdAt: string,
-        private updatedAt: string,
-        private creatorId: string,
-        private creatorName:string
+       private id: string,
+       private content: string,
+       private likes: number,
+       private dislikes: number,
+       private createdAt: string,
+       private updatedAt: string,
+       private creatorId: string
     ){}
     public getId(): string{
         return this.id
@@ -65,23 +64,18 @@ export class Post{
     public setCreatorId(value:string):void{
         this.creatorId = value
     }
-    public getCreatorName(): string{
-        return this.creatorName
-    }    
-    public setCreatorName(value:string):void{
-        this.creatorName = value
-    }
-    public toDBModel():PostDB{
+
+
+    public toDBModelPosts():IPostDB{
         return{
             id: this.id,
             creator_id:this.creatorId,
-            creator_name: this.creatorName,
             content: this.content,
             likes: this.likes,
             dislikes: this.dislikes,
             created_at: this.createdAt,
             updated_at: this.updatedAt
-        }
+            }
     }
     public toBusinessModelPost():PostsModel{
         return{
@@ -93,7 +87,6 @@ export class Post{
             updatedAt: this.updatedAt,
             creator:{
                 id:this.creatorId,
-                name: this.creatorName
             }
         }
     }

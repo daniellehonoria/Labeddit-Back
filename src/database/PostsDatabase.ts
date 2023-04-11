@@ -1,4 +1,4 @@
-import { PostDB, LikeOrDislikeDB,  POST_LIKE } from "../types";
+import { IPostDB, LikeOrDislikeDB,  POST_LIKE } from "../interfaces";
 import { BaseDatabase } from "./BaseDatabase";
 
 export class PostDatabase extends BaseDatabase{
@@ -7,22 +7,22 @@ export class PostDatabase extends BaseDatabase{
 
 
 public async findPosts(){
-    const postDB: PostDB[] = await BaseDatabase
+    const postDB: IPostDB[] = await BaseDatabase
     .connection(PostDatabase.TABLE_POSTS)
     return postDB
 }
-public async createPost(newPostDB:PostDB):Promise<void>{
+public async createPost(newPostDB:IPostDB):Promise<void>{
     await BaseDatabase
     .connection(PostDatabase.TABLE_POSTS)
     .insert(newPostDB)
 }
 public async findPostById(id:string){
-    const [postDB]:PostDB[] | undefined[] = await BaseDatabase
+    const [postDB]:IPostDB[] | undefined[] = await BaseDatabase
     .connection(PostDatabase.TABLE_POSTS)
     .where({id})
     return postDB
 }
-public async upDatePostById(id: string, postDB:PostDB):Promise<void>{
+public async upDatePostById(id: string, postDB:IPostDB):Promise<void>{
     await BaseDatabase
     .connection(PostDatabase.TABLE_POSTS)
     .update(postDB)
@@ -35,8 +35,8 @@ public async deletedPostById(id:string):Promise<void>{
     .where({id})
 }
 
-public findPostByCreatorId = async(postId: string):Promise<PostDB | undefined> =>{
-    const result: PostDB[] = await BaseDatabase
+public findPostByCreatorId = async(postId: string):Promise<IPostDB | undefined> =>{
+    const result: IPostDB[] = await BaseDatabase
     .connection(PostDatabase.TABLE_POSTS)
     .select(
         "posts.id",
@@ -94,8 +94,16 @@ return result[0]
             })
     }
 
-public likeOrDislikePost = async(likeDIslike:LikeOrDislikeDB):Promise<void> =>{
+public likeOrDislikePost = async(likeDislike:LikeOrDislikeDB):Promise<void> =>{
     await BaseDatabase.connection(PostDatabase.TABLE_LIKES_DISLIKES)
-    .insert(likeDIslike)
+    .insert(likeDislike)
+}
+public findById = async (id: string): Promise<IPostDB | undefined> => {
+    const result: IPostDB[] = await BaseDatabase
+        .connection(PostDatabase.TABLE_POSTS)
+        .select()
+        .where({ id })
+    
+    return result[0]
 }
 }
