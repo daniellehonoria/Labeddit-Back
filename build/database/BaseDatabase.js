@@ -7,7 +7,7 @@ class BaseDatabase {
 BaseDatabase.connection = (0, knex_1.knex)({
     client: "sqlite3",
     connection: {
-        filename: "./src/database/labeddit.db"
+        filename: "./labeddit.db"
     },
     useNullAsDefault: true,
     pool: {
