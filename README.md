@@ -5,7 +5,7 @@ O Labeddit é uma rede social com o objetivo de promover a conexão e interaçã
 Quem se cadastrar no aplicativo poderá criar e curtir publicações. <br/>
 
 ## FrontEnd
-### :link: [Repositório Front]("https://github.com/daniellehonoria/Labeddit-Front")
+### :link: [Repositório Front](https://github.com/daniellehonoria/Labeddit-Front)
 
 ## :link: Índice
 - <a href="#funcionalidades">Funcionalidades do projeto</a>
